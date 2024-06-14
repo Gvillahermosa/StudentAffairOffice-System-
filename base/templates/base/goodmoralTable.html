@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Case List</title>
+    <link rel="stylesheet" href="{% static 'studentdiscipline/css/gmTable.css' %}">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    <link rel="icon" href="{% static 'studentdiscipline/imgs/CTU_logo.png' %}" type="image/png">
+</head>
+<body>
+    <div class="header-logo">
+        <img src="{% static 'studentdiscipline/imgs/newlogo.jpg' %}" alt="new ctu logo">
+    </div>
+    
+    
+    <div class="container">
+        <h2>Request Good Moral</h2>
+        <div class="btn-container">
+            <a href="{{request.META.HTTP_REFERER}}" style="color: black;">
+                <i style="font-size:24px" class="fa">&#xf060;</i>
+            </a>
+        </div>
+
+        <p>Full Name: {{ student.lastname }}, {{ student.firstname }} {{ student.middlename }}</p>
+        <p>Year Level: {{ student.year_level }}</p>
+        
+        {% if not existing_request %}
+        <form action="" method="POST">
+            {% csrf_token %}
+            <p>Sanction: {{ student.sanction }}</p>
+            {% if student.sanction_completed == True or case_count == 0 %}
+            <label for="reason">Reason:</label>
+            <input class="reason-txt" type="text" name="student_reason">
+            <p>Number of cases: {{ case_count }}</p>
+            <p>Sanction Completed</p>
+            <div class="req-btn">
+                <input class="request-btn" type="submit" value="Submit" />
+            </div>
+            {% endif %}
+        </form>
+            {% if case_count != 0 and student.sanction_completed == False%}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <p>Sanction On Progress</p>
+                    {% if student.sanction == 'apology_letter' %}
+                        <label for="apology_letter">Upload Apology Letter:</label>
+                        <input type="file" name="apology_letter">
+                        <br>
+                        <br>
+                        <button type="submit" class="request-btn"> UPLOAD</button>
+                    {% elif student.sanction == 'community_service' %}
+                        <a class="request-btn" href="{% url 'studentLife_discipline:community-service-tracker' student.studentID %}">Community Service Tracker</a>
+                    {% elif student.sanction == 'apology_letter_community_service' %}
+                        {% if not student.apology_letter %}
+                        <label for="apology_letter">Upload Apology Letter:</label>
+                        <input type="file" name="apology_letter">
+                        <br>
+                        <br>
+                        <button type="submit" class="request-btn"> UPLOAD</button>
+                        {% else %}
+                        <a class="request-btn" href="{% url 'studentLife_discipline:community-service-tracker' student.studentID %}">Community Service Tracker</a>
+                        {% endif %}
+                    {% endif %}
+                </form>
+                
+            {% endif %}
+            
+        {% else %}
+        <p>Reason: <u>{{existing_request.reason}}</u></p>
+        {% if existing_request.is_approved %}
+        <div class="req-btn">
+            <a class="request-btn" href="{% url 'studentLife_discipline:GoodMoralTemplate' student.studentID %}">Print Good Moral</a>
+        </div>
+       
+        {% elif existing_request.is_declined%}
+        <a class="request-btn">Declined</a>
+        {% else %}
+        <div class="req-btn">
+            <a class="request-btn">PENDING...</a>
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+{% extends 'main.html' %}
+
+{% load static %}
+
+{% block bodycontent %}
+<link rel="stylesheet" href="{% static 'studentdiscipline/css/Transact.css' %}">
+<script src="{% static 'studentdiscipline/js/printtransac.js' %} "></script>
+<div class="transact-container">
+    <img src="{% static 'studentdiscipline/imgs/newlogo.jpg' %}">
+    <div class="transact-header">
+        <form method="GET" class="filter-form">
+            <div class="filter-but">
+                <button type="submit" class="myButton" name="filter-btn">Filter</button>
+            </div>
+            <div class="filter-fields">
+                <label for="query">Name:</label>
+                <input type="text" id="query" name="query" placeholder="Enter name">
+                <label class="date1" for="date_filter">Select Date:</label>
+                <select id="date_filter" name="date_filter" style="color: black;">
+                    <option value="" style="color: black;">-- Select --</option>
+                    <option value="daily" style="color: black;">Daily</option>
+                </select>
+                <label class="month1" for="month_filter">Select Month:</label>
+                <select id="month_filter" name="month_filter" style="color: black;">
+                    <option value="" style="color: black;">-- Select --</option>
+                    <option value="1" style="color: black;">January</option>
+                    <option value="2" style="color: black;">February</option>
+                    <option value="3" style="color: black;">March</option>
+                    <option value="4" style="color: black;">April</option>
+                    <option value="5" style="color: black;">May</option>
+                    <option value="6" style="color: black;">June</option>
+                    <option value="7" style="color: black;">July</option>
+                    <option value="8" style="color: black;">August</option>
+                    <option value="9" style="color: black;">September</option>
+                    <option value="10" style="color: black;">October</option>
+                    <option value="11" style="color: black;">November</option>
+                    <option value="12" style="color: black;">December</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <div class="transact-table">
+        <h2>Transaction Report</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Transaction ID</th>
+                    <th style="width: 60px;">Student</th>
+                    <th style="width: 90px;">Reason</th>
+                    <th style="width: 80px;">Date</th>
+                    <th>Request</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for goodmoral in goodmorals %}
+                <tr>
+                    <td>{{ goodmoral.id }}</td>
+                    <td>{{ goodmoral.student.lastname }}, {{ goodmoral.student.firstname }} {{ goodmoral.student.middlename }}</td>
+                    <td>{{ goodmoral.reason }}</td>
+                    <td>{{ goodmoral.created}}</td>
+                    <td>
+                        {% if not goodmoral.is_approved and not goodmoral.is_declined %}
+                            <a href="{% url 'studentLife_discipline:approve_request' goodmoral.id %}" class="btn btn-success">✔️</a>
+                            <a href="{% url 'studentLife_discipline:decline_request' goodmoral.id %}" class="btn btn-danger">❌</a>
+                        {% elif goodmoral.is_approved %}
+                            Approved
+                        {% elif goodmoral.is_declined %}
+                            Declined
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="dashboard-btn">
+        <button onclick="printtransac()" type="submit" class="myButton1" name="print-btn">Print</button>
+    </div>
+</div>
+{% endblock %}

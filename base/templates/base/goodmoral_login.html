@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+
+{% load static %}
+{% block bodycontent %}
+
+<link rel="stylesheet" href="{% static 'studentdiscipline/css/Goodmoral.css' %}">
+<script src="{% static 'studentdiscipline/js/date2.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div class="request-container">
+    <img src="{% static 'studentdiscipline/imgs/newlogo.jpg' %}">
+    <div class="request-content">
+        <div class="req-inputs">
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="autodate-container">
+                    <input type="datetime-local" name="autodate"  id="autodate" class="autodate">
+                </div>
+                <label for="student_id">Enter Student ID:</label>
+                <input type="text" placeholder="Student ID" id="student_id" name="student_id" class="inputs">
+                <button type="submit" class="myButton1" name="goodmoral">Enter</button>
+            </form>
+            {% if no_student_found %}
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'No student found with that ID.',
+                        });
+                    });
+                </script>
+            {% endif %}
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}

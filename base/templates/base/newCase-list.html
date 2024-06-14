@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Case List</title>
+    <link rel="stylesheet" href="{% static 'studentdiscipline/css/newCaseList.css' %}">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    <link rel="icon" href="{% static 'studentdiscipline/imgs/CTU_logo.png' %}" type="image/png">
+
+
+</head>
+<body>
+    <div class="header-logo">
+        <img src="{% static 'studentdiscipline/imgs/newlogo.jpg' %}" alt="new ctu logo">
+    </div>
+    <div class="btn-container">
+        <a href="{% url 'studentLife_discipline:NewCase' %}" class="btn">
+            <i class="fa">&#xf060;</i>
+        </a>
+    </div>
+    <div class="container">
+        <h2>Student Case List</h2>
+            <div class="search-container">
+                <form action="" method="GET">
+                    <input id="search" type="search" placeholder="Search Student ID" class="search-btn" name="q" value="{{ query|default_if_none:'' }}"/>
+                    <button class="search-btn2" type="submit">Go</button>
+                    {% if no_student_found == True %}
+                    <p>No Student Found</p>
+                    {% endif %}
+                </form>
+            </div>
+        
+       
+        {% if student.sanction is not None %}
+            <form action="" method="POST" id="sanction-form">
+                {% csrf_token %}
+                <div class="new-head-container">
+                    <div class="new-head-sanctions">
+                        <label for="sanction">Sanctions: </label>
+                        <select name="sanction" id="sanction">
+                            <option value="" {% if not student.sanction %} selected {% endif %} disabled>
+                                Select Sanctions
+                            </option>
+
+                            <option value="apology_letter" {% if student.sanction == 'apology_letter' %} selected {% endif %}>
+                                Apology Letter
+                            </option>
+
+                            <option value="community_service" {% if student.sanction == 'community_service' %} selected {% endif %}>
+                                Community Service
+                            </option>
+
+                            <option value="suspension" {% if student.sanction == 'suspension' %} selected {% endif %}>
+                                Suspension
+                            </option>
+
+                            <option value="apology_letter_community_service" {% if student.sanction == 'apology_letter_community_service' %} selected {% endif %}>
+                                Apology Letter and Community Service
+                            </option>
+
+                            <option value="expulsion" {% if student.sanction == 'expulsion' %} selected {% endif %}>
+                                Expulsion
+                            </option>
+                        </select>
+                        <button type="button" class="sanction-submit-btn">Select Sanction</button>
+                    </div>
+
+                    {% if student.sanction_completed is True %}
+                    <div class="new-head-status">
+                        <label for="sanction_status">Status: </label>
+                        <input type="text" name="sanction_status" id="sanction_status" class="sanctions" value="Sanction Completed">
+                    </div>
+                    {% elif student.sanction_completed is False %}
+                    <div class="new-head-status">
+                        <label for="sanction_status">Status: </label>
+                        <input type="text" name="sanction_status" id="sanction_status" class="sanctions" value="Sanction Pending">
+                    </div>
+                    {% else %}
+                    <div class="new-head-status">
+                        <label for="sanction_status">Status: </label>
+                        <input type="text" name="sanction_status" id="sanction_status" class="sanctions" value="">
+                    </div>
+                    {% endif %}
+
+                    {% if student.sanction == 'community_service' %}
+                    <div class="new-head-hour">
+                        <label for="hours">Hours: </label>
+                        <input type="text" name="service-hours" id="hours" class="hour" value="{% if student.community_service_hours %} {{ student.community_service_hours }} {% endif %}">
+                    </div>
+
+                        <div class="new-head-deadline">
+                            <label class="dead-label" for="deadline">Deadline: </label>
+                            <select name="service-deadline" id="deadline">
+                                <option value="" disabled selected>Select Duration</option>
+                                <option value="1">1 week</option>
+                                <option value="2">2 weeks</option>
+                                <option value="3">3 weeks</option>
+                                <option value="4">4 weeks</option>
+                                <option value="5">5 weeks</option>
+                                <option value="6">6 weeks</option>
+                                <option value="7">7 weeks</option>
+                                <option value="8">8 weeks</option>
+                                <option value="9">9 weeks</option>
+                                <option value="10">10 weeks</option>
+                                <option value="11">11 weeks</option>
+                                <option value="12">12 weeks</option>
+                                <option value="13">13 weeks</option>
+                                <option value="14">14 weeks</option>
+                                <option value="15">15 weeks</option>
+                                <option value="16">16 weeks</option>
+                                <option value="17">17 weeks</option>
+                                <option value="18">18 weeks</option>
+                                <option value="19">19 weeks</option>
+                                <option value="20">20 weeks</option>
+                            </select>
+                            <p>{{student.community_service_deadline}}</p>
+                        </div>
+                    {% elif student.sanction == 'suspension' %}
+                        <div class="new-head">
+                            <select name="suspension_duration" id="suspension">
+                                <option value="" disabled selected>Select Duration</option>
+                                <option value="1">1 Semester</option>
+                                <option value="2">2 Semesters</option>
+                            </select>
+                            <div class="suspension-duration">
+                                <p>Start: {{ student.suspension_start_date }}</p> <p>End: {{ student.suspension_end_date }}</p>
+                            </div>
+                        </div>
+                    {% elif student.sanction == 'apology_letter' %}  
+                        {% if student.apology_letter %}
+                        <p>Apology Letter: <a href="{{ student.apology_letter.url }}">{{ student.apology_letter.name }}</a></p>
+                        {% endif %}
+                    {% elif student.sanction == 'apology_letter_community_service' %}
+                        <div>
+                            <div class="new-head-hour">
+                                <label for="hours">Hours: </label>
+                                <input type="text" name="service-hours" id="hours" class="hour" value="{% if student.community_service_hours %} {{ student.community_service_hours }} {% endif %}">
+                            </div>
+
+                            <div class="new-head-deadline">
+                                <label class="dead-label" for="deadline">Deadline: </label>
+                                <select name="service-deadline" id="deadline">
+                                    <option value="" disabled selected>Select Duration</option>
+                                    <option value="1">1 week</option>
+                                    <option value="2">2 weeks</option>
+                                    <option value="3">3 weeks</option>
+                                    <option value="4">4 weeks</option>
+                                    <option value="5">5 weeks</option>
+                                    <option value="6">6 weeks</option>
+                                    <option value="7">7 weeks</option>
+                                    <option value="8">8 weeks</option>
+                                    <option value="9">9 weeks</option>
+                                    <option value="10">10 weeks</option>
+                                    <option value="11">11 weeks</option>
+                                    <option value="12">12 weeks</option>
+                                    <option value="13">13 weeks</option>
+                                    <option value="14">14 weeks</option>
+                                    <option value="15">15 weeks</option>
+                                    <option value="16">16 weeks</option>
+                                    <option value="17">17 weeks</option>
+                                    <option value="18">18 weeks</option>
+                                    <option value="19">19 weeks</option>
+                                    <option value="20">20 weeks</option>
+                                </select>
+                                <p>{{student.community_service_deadline}}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="btn-container">
+                        <input type="Submit" value="Submit" class="btn1"/>
+                    </div>
+                </div>
+            </form>
+        {% else %}
+            <form action="" method="POST" id="sanction-form">
+                {% csrf_token %}
+                <div class="new-head">
+                    <label for="sanction">Sanctions: </label>
+                    <select name="sanction" id="sanction">
+                        <option value="" disabled selected>Select Sanctions</option>
+                        <option value="apology_letter">Apology Letter</option>
+                        <option value="community_service">Community Service</option>
+                        <option value="suspension">Suspension</option>
+                        <option value="apology_letter_community_service">Apology Letter and Community Service</option>
+                        <option value="expulsion">Expulsion</option>
+                    </select>
+                    <button type="button" class="sanction-submit-btn">Select Sunction</button>
+                </div>
+            </form>
+        {% endif %}
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Case Number</th>
+                        <th>Full Name</th>
+                        <th>Violations</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Classification</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if cases %}
+                    {% for case in cases %}
+                    <tr>
+                        <td>{{ case.id }}</td>
+                        <td>{{ case.student.lastname }}, {{ case.student.firstname }} {{ case.student.middlename }}</td>
+                        <td>{{ case.violation }}</td>
+                        <td>{{ case.description }}</td>
+                        <td>{{ case.case_date }}</td>
+                        {% if case.case_class == '1' %}
+                        <td>Light offense</td>
+                        {% elif case.case_class == '2' %}
+                        <td>Serious offense</td>
+                        {% elif case.case_class == '3' %}
+                        <td>Very Serious offense</td>
+                        {% endif %}
+                        <td><a href="{% url 'studentLife_discipline:update-case' case.id %}">Update</a></td>
+                        <td><a href="#" class="delete-btn" data-id="{{ case.id }}">Delete</a></td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'js/modal-newcaselist.js' %}"></script>
+</body>
+</html>   

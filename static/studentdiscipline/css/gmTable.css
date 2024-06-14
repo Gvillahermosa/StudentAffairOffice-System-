@@ -1,0 +1,119 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.header-logo img {
+    margin-top: 1%;
+    margin-left: 28%;
+    width: 43%;
+    height: auto;
+}
+
+.container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 600px;
+    margin: 50px auto;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+p {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+form label{
+    font-weight: bold;
+}
+label {
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.reason-txt{
+    outline: none;
+    height: 50px;
+}
+
+/*arrow button */
+.btn-container {
+    margin-bottom: 5%;
+    
+}
+.btn-container i {
+    margin-left: 2%;
+    font-size: 27px;
+    color: black;
+    transition: transform 0.3s;
+}
+@keyframes moveRight {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(10px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+.btn-container i:hover {
+    animation: moveRight 0.5s infinite; 
+}
+
+
+.container a{
+    color: black;
+}
+.req-btn{
+    text-align: center;
+}
+.home-btn, .request-btn {
+    box-shadow: inset 0px 1px 0px 0px #bee2f9;
+    background: linear-gradient(to bottom, #63b8ee 5%, #468ccf 100%);
+    background-color: #63b8ee;
+    border-radius: 6px;
+    border: 1px solid #3866a3;
+    display: inline-block;
+    cursor: pointer;
+    color: #14396a;
+    font-family: Verdana;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 10px 13px; /* Adjust padding for better appearance */
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #7cacde;
+    margin: 0 5px; /* Add margin between buttons */
+}
+
+.home-btn:hover, .request-btn:hover {
+    background: linear-gradient(to bottom, #468ccf 5%, #63b8ee 100%);
+    background-color: #468ccf;
+}
+
+.home-btn:active, .request-btn:active {
+    position: relative;
+    top: 1px;
+}
